@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#eee7db">
+<title>背诵 · 俄语单词卡</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">Я</div>
+      <div class="brand-copy">
+        <div class="brand-line">
+          <h1>俄语单词卡</h1>
+          <span class="alpha-badge">大学俄语 3</span>
+        </div>
+        <p>СЛОВА · 逐词重音与语法</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a href="study.html" class="active">背诵</a>
+      <a href="unit.html">本课全部</a>
+      <a href="sources.html">来源</a>
+    </nav>
+  </header>
+
+  <main class="stage">
+    <div class="stage-head">
+      <div>
+        <span class="eyebrow" id="deckTag">第 1 课</span>
+      </div>
+      <div class="head-right">
+        <label class="sr-only" for="lessonSelect">选择课次</label>
+        <select id="lessonSelect"></select>
+        <span class="eyebrow" id="counter">0 / 0</span>
+      </div>
+    </div>
+
+    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+    <div class="card-area" id="cardArea">
+      <p class="placeholder">正在载入词书…</p>
+    </div>
+
+    <div class="pager">
+      <button type="button" id="prevBtn" aria-label="上一个单词"><kbd>←</kbd> 上一个</button>
+      <span class="pos" id="pagerPos">— / —</span>
+      <button type="button" id="nextBtn" aria-label="下一个单词">下一个 <kbd>→</kbd></button>
+    </div>
+
+    <div class="grades" id="grades">
+      <button class="grade" data-g="1" disabled>忘了<kbd>1</kbd></button>
+      <button class="grade" data-g="2" disabled>模糊<kbd>2</kbd></button>
+      <button class="grade" data-g="3" disabled>记得<kbd>3</kbd></button>
+      <button class="grade" data-g="4" disabled>轻松<kbd>4</kbd></button>
+    </div>
+  </main>
+
+  <section class="stats">
+    <div class="stat"><b id="statToday">0</b><span>今日已背</span></div>
+    <div class="stat"><b id="statDue">0</b><span>待复习</span></div>
+    <div class="stat"><b id="statDone">0</b><span>已掌握</span></div>
+    <div class="stat"><b id="statStreak">0</b><span>连续天数</span></div>
+  </section>
+
+  <footer class="foot">
+    <div><kbd>空格</kbd> 翻面 · <kbd>1</kbd>–<kbd>4</kbd> 评分 · <kbd>←</kbd><kbd>→</kbd> 切词 · <kbd>U</kbd> 撤销</div>
+    <div id="bookTitle">大学俄语 3</div>
+  </footer>
+</div>
+
+<script src="data/course.js"></script>
+<script src="common.js"></script>
+<script src="study.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

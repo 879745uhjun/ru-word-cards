@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#eee7db">
+<title>来源与用法 · 俄语单词卡</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">Я</div>
+      <div class="brand-copy">
+        <div class="brand-line">
+          <h1>俄语单词卡</h1>
+          <span class="alpha-badge">大学俄语 3</span>
+        </div>
+        <p>СЛОВА · 逐词重音与语法</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a href="study.html">背诵</a>
+      <a href="unit.html">本课全部</a>
+      <a href="sources.html" class="active">来源</a>
+    </nav>
+  </header>
+
+  <div class="prose">
+    <h3>内容来源</h3>
+    <p>1022 个词条全部取自《大学俄语（东方）3》的课后生词表（Новые слова），逐课整理：俄语词形保留教材标注的重音，中文释义、词性／性、支配（接格）、动词的体对均照表录入，未做改写或补充。</p>
+
+    <h3>字段说明</h3>
+    <p><b>重音</b>：词中用红色标出的元音为重音，写作 <code>вн[е]шность</code> 的形式存储。<br>
+    <b>词性</b>：名 / 动 / 形 / 副 / 前 / 连 / 数，名词附性（阴／阳／中）。<br>
+    <b>接</b>：教材印的支配关系，如「接 что」「接 ком-чём」。<br>
+    <b>体对</b>：未完成体 // 完成体，成对出现时两个词形都是可接受答案。</p>
+
+    <h3>复习算法</h3>
+    <p>四档自评（忘了 / 模糊 / 记得 / 轻松），按卡片各自的间隔系数递推下次复习日：首次为 1–4 天，之后按系数放大，间隔满 21 天记为「已掌握」。全部状态存在本机浏览器的 localStorage，不上传任何服务器。</p>
+
+    <h3>版权与使用范围</h3>
+    <p>词表与释义来自教材，版权归原出版方所有。本页仅作个人学习使用，请勿公开分发或用于商业用途。程序代码（HTML/CSS/JS）可自由修改。</p>
+
+    <h3>重新生成数据</h3>
+    <p>词条数据由 <code>build-data.js</code> 从词书包 <code>dxey.pack.json</code> 生成，产物是 <code>data/course.js</code>。改词表后重新运行即可：</p>
+    <p><code>node build-data.js &lt;dxey.pack.json 路径&gt;</code></p>
+  </div>
+
+  <footer class="foot">
+    <div>俄语单词卡 · 大学俄语 3</div>
+    <div><a href="index.html">← 返回首页</a></div>
+  </footer>
+</div>
+<script src="pwa.js"></script>
+</body>
+</html>

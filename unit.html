@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#eee7db">
+<title>本课全部 · 俄语单词卡</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">Я</div>
+      <div class="brand-copy">
+        <div class="brand-line">
+          <h1>俄语单词卡</h1>
+          <span class="alpha-badge">大学俄语 3</span>
+        </div>
+        <p>СЛОВА · 逐词重音与语法</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a href="study.html">背诵</a>
+      <a href="unit.html" class="active">本课全部</a>
+      <a href="sources.html">来源</a>
+    </nav>
+  </header>
+
+  <div class="section-title">
+    <h2 id="unitTitle">本课全部</h2>
+    <p><a href="index.html" id="studyLink">开始背这一课 →</a></p>
+  </div>
+
+  <div id="lessonPicker" class="head-right" style="margin:0 0 12px"></div>
+
+  <div class="wordlist" id="words"></div>
+
+  <footer class="foot">
+    <div>● 灰色＝未学　<span style="color:var(--gold)">●</span> 金色＝学习中　<span style="color:var(--ok)">●</span> 绿色＝已掌握</div>
+    <div><a href="index.html">← 返回首页</a></div>
+  </footer>
+</div>
+
+<script src="data/course.js"></script>
+<script src="common.js"></script>
+<script src="unit.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

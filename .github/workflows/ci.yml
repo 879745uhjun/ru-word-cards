@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: 数据自检
+        run: node tests/data.test.js
+      - name: 静态站点自检
+        run: node check-site.js
+      - name: JS 语法检查
+        run: for f in *.js data/*.js tests/*.js; do node --check "$f"; done
