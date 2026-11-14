@@ -243,3 +243,19 @@ select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .unit-row{grid-template-columns:36px minmax(0,1fr) 110px 16px;gap:10px}
   .unit-count{display:none}
 }
+
+/* 无障碍：仅读屏可见 */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* 本课搜索 */
+.unit-search{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+.unit-search input{
+  flex:1;max-width:340px;border:1px solid var(--line);border-radius:999px;background:rgba(255,253,248,.75);
+  padding:8px 14px;font-size:13px;font-family:var(--sans);color:var(--ink);outline:none;
+}
+.unit-search input:focus{border-color:#c9b7a0;box-shadow:0 0 0 3px rgba(178,58,47,.08)}
+.unit-search .q-count{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+.row.hidden{display:none}
+
+.io-hint{font-size:11px;color:var(--ok);align-self:center}
+.io-hint.err{color:var(--accent-deep)}

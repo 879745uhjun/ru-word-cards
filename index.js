@@ -39,4 +39,58 @@
       '</a>';
   });
   document.getElementById('units').innerHTML = html;
+
+  // ── 导出 / 导入进度 ──
+  var hint = document.getElementById('ioHint');
+
+  function say(msg, bad) {
+    hint.textContent = msg;
+    hint.className = 'io-hint' + (bad ? ' err' : '');
+    if (msg) setTimeout(function () { if (hint.textContent === msg) hint.textContent = ''; }, 6000);
+  }
+
+  document.getElementById('exportBtn').addEventListener('click', function () {
+    var payload = {
+      app: 'ru-word-cards',
+      version: 1,
+      book: book.id,
+      exportedAt: new Date().toISOString(),
+      state: state
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'ru-word-cards-' + R.dayKey(R.today()) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    say('已导出 ' + c.total + ' 词的进度');
+  });
+
+  var fileInput = document.getElementById('fileInput');
+  document.getElementById('importBtn').addEventListener('click', function () { fileInput.click(); });
+
+  fileInput.addEventListener('change', function () {
+    var f = fileInput.files && fileInput.files[0];
+    if (!f) return;
+    var fr = new FileReader();
+    fr.onload = function () {
+      try {
+        var data = JSON.parse(String(fr.result));
+        var st = data && data.state ? data.state : data;
+        if (!st || typeof st !== 'object' || typeof st.cards !== 'object') throw new Error('文件里没有进度数据');
+        if (data.book && book.id && data.book !== book.id) throw new Error('这份进度属于另一本词书');
+        if (!confirm('导入会覆盖本机当前进度，继续？')) return;
+        st.days = st.days || {};
+        st.streak = st.streak || { n: 0, last: 0 };
+        if (!st.newPerDay) st.newPerDay = 20;
+        R.save(st);
+        location.reload();
+      } catch (e) {
+        say('导入失败：' + e.message, true);
+      }
+    };
+    fr.readAsText(f);
+    fileInput.value = '';
+  });
 })();

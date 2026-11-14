@@ -36,6 +36,12 @@ book.items.forEach((it, i) => {
   const close = (it.ru.match(/\]/g) || []).length;
   ok(open === close && open <= 1, tag + ' 重音标记成对且至多一个');
   ok(!/\u0301/.test(it.ru), tag + ' 已转换为方括号写法');
+  ok(!/[()（）;]/.test(it.ru), tag + ' 词形里没有括号或分号');
+  ok(!/\u0301/.test(it.gov || ''), tag + ' gov 没有组合重音');
+  ok(!/\u0301/.test(it.note || ''), tag + ' note 没有组合重音');
+  if (it.kind === 'pair') ok(Array.isArray(it.alt) && it.alt.length > 0, tag + ' 体对带 alt');
+  if (it.kind !== 'phrase') ok(it.pos !== '' || it.kind === 'pair', tag + ' 非词组要有词性');
+  if (it.gender) ok(['阴', '阳', '中'].includes(it.gender), tag + ' 性别取值合法');
   if (it.alt) it.alt.forEach((a) => ok(!/\[.*\[/.test(a), tag + ' alt 重音标记合法'));
 });
 
