@@ -11,6 +11,9 @@
   var history = [];     // 撤销栈
   var lesson = 0;
 
+  var bankById = {};
+  (book.bank || []).forEach(function (e) { bankById[e.id] = e; });
+
   var el = {
     tag: document.getElementById('deckTag'),
     select: document.getElementById('lessonSelect'),
@@ -122,6 +125,12 @@
     if (revealed) {
       html += '<p class="meaning">' + R.esc(it.zh) + '</p>';
       html += '<div class="grammar">' + R.grammarChips(it) + '</div>';
+      var exs = (it.ex || []).map(function (id) { return bankById[id]; }).filter(Boolean);
+      if (exs.length) {
+        html += '<div class="examples"><div class="ex-label">例句</div>' +
+          exs.map(function (e) { return '<p>' + R.exHTML(e.ru, it) + '</p>'; }).join('') +
+          '</div>';
+      }
       if (it.note) html += '<p class="hint">' + R.esc(it.note) + '</p>';
       html += '<p class="hint"><kbd>1</kbd> 忘了 · <kbd>2</kbd> 模糊 · <kbd>3</kbd> 记得 · <kbd>4</kbd> 轻松</p>';
     } else {

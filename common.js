@@ -141,6 +141,28 @@ window.RWC = (function () {
     return chips.join('');
   }
 
+  // 词干：与 build-data.js 的匹配规则保持一致
+  function stemOf(word) {
+    var w = plainRu(word).toLowerCase().replace(/ё/g, 'е');
+    if (w.length > 6) return w.slice(0, -2);
+    if (w.length > 4) return w.slice(0, -1);
+    return w;
+  }
+
+  // 例句里把目标词加粗（按词干匹配，覆盖变格变位）
+  function exHTML(text, item) {
+    var stems = [item.ru].concat(item.alt || []).map(stemOf).filter(function (s) { return s.length >= 3; });
+    return esc(text).split(/(\s+)/).map(function (tok) {
+      if (!tok.trim()) return tok;
+      var t = tok.toLowerCase().replace(/ё/g, 'е').replace(/[^а-я\-]/g, '');
+      if (!t) return tok;
+      var hit = stems.some(function (st) {
+        return t === st || (t.indexOf(st) === 0 && t.length <= st.length + 6);
+      });
+      return hit ? '<b class="ex-w">' + tok + '</b>' : tok;
+    }).join('');
+  }
+
   function dayKey(day) {
     var d = new Date(day * DAY);
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -155,7 +177,7 @@ window.RWC = (function () {
   return {
     today: today, load: load, save: save, cardOf: cardOf, grade: grade,
     counts: counts, buildQueue: buildQueue, bumpDay: bumpDay,
-    esc: esc, ruHTML: ruHTML, plainRu: plainRu,
+    esc: esc, ruHTML: ruHTML, plainRu: plainRu, exHTML: exHTML, stemOf: stemOf,
     grammarChips: grammarChips, lessonTitle: lessonTitle,
     isDone: isDone, isLearning: isLearning, isDue: isDue, dayKey: dayKey
   };

@@ -50,6 +50,26 @@ book.lessons.forEach((l) => {
   ok(n === l.count, '第 ' + l.n + ' 课计数一致（声明 ' + l.count + '，实际 ' + n + '）');
 });
 
+// 例句
+const bank = book.bank || [];
+const bankIds = new Set(bank.map((e) => e.id));
+let exRefs = 0;
+book.items.forEach((it, i) => {
+  (it.ex || []).forEach((id) => {
+    exRefs += 1;
+    ok(bankIds.has(id), '#' + i + ' 例句 ' + id + ' 在句库里');
+  });
+});
+bank.forEach((e) => {
+  ok(typeof e.ru === 'string' && e.ru.length > 8, e.id + ' 句子非空');
+  ok(e.l >= 1 && e.l <= 12, e.id + ' 课次合法');
+  ok(!/[\u0301\u0300]/.test(e.ru), e.id + ' 句子无重音符号');
+});
+const withEx = book.items.filter((i) => (i.ex || []).length).length;
+ok(bank.length === 0 || bank.length > 500, '句库 > 500 条，实际 ' + bank.length);
+ok(bank.length === 0 || withEx > 700, '覆盖词条 > 700，实际 ' + withEx);
+console.log('例句 %d 条 · 引用 %d 次 · 覆盖 %d 个词条', bank.length, exRefs, withEx);
+
 const stressed = book.items.filter((i) => i.ru.includes('[')).length;
 console.log('课数 %d · 词条 %d · 带重音 %d', book.lessons.length, book.items.length, stressed);
 
