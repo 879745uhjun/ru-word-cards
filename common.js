@@ -168,6 +168,35 @@ window.RWC = (function () {
     }).join('');
   }
 
+  // 已带组合重音的词形 -> 重音染色（表格用）
+  function accentHTML(text) {
+    return esc(text).replace(/([а-яёА-ЯЁ])\u0301/g, '<span class="accent">$1\u0301</span>');
+  }
+
+  function tableHTML(h, r) {
+    var out = '<table class="forms"><thead><tr>';
+    h.forEach(function (x, i) { out += '<th' + (i === 0 ? ' class="row-h"' : '') + '>' + esc(x) + '</th>'; });
+    out += '</tr></thead><tbody>';
+    r.forEach(function (row) {
+      out += '<tr>';
+      row.forEach(function (cell, i) {
+        out += '<td' + (i === 0 ? ' class="row-h"' : '') + '>' + (i === 0 ? esc(cell) : accentHTML(cell)) + '</td>';
+      });
+      out += '</tr>';
+    });
+    return out + '</tbody></table>';
+  }
+
+  // 变格/变位表
+  function formsHTML(f) {
+    if (!f) return '';
+    var out = '<div class="forms-wrap"><div class="forms-label">' + (f.k === 'v' ? '变位' : '变格') + '</div>';
+    if (f.i) out += '<div class="forms-inf">不定式 ' + accentHTML(f.i) + '</div>';
+    out += tableHTML(f.h, f.r);
+    if (f.p) out += tableHTML(f.p.h, f.p.r);
+    return out + '</div>';
+  }
+
   function dayKey(day) {
     var d = new Date(day * DAY);
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -183,6 +212,7 @@ window.RWC = (function () {
     today: today, load: load, save: save, cardOf: cardOf, grade: grade,
     counts: counts, buildQueue: buildQueue, bumpDay: bumpDay,
     esc: esc, ruHTML: ruHTML, plainRu: plainRu, exHTML: exHTML, stemOf: stemOf,
+    accentHTML: accentHTML, formsHTML: formsHTML,
     grammarChips: grammarChips, lessonTitle: lessonTitle,
     isDone: isDone, isLearning: isLearning, isDue: isDue, dayKey: dayKey
   };

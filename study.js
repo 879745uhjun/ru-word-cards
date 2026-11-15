@@ -11,6 +11,8 @@
   var history = [];     // 撤销栈
   var lesson = 0;
 
+  var FORMS = window.RU_WORDS_FORMS || {};
+
   var bankById = {};
   (book.bank || []).forEach(function (e) { bankById[e.id] = e; });
 
@@ -125,6 +127,7 @@
     if (revealed) {
       html += '<p class="meaning">' + R.esc(it.zh) + '</p>';
       html += '<div class="grammar">' + R.grammarChips(it) + '</div>';
+      html += R.formsHTML(FORMS[it.id]);
       var exs = (it.ex || []).map(function (id) { return bankById[id]; }).filter(Boolean);
       if (exs.length) {
         html += '<div class="examples"><div class="ex-label">例句</div>' +

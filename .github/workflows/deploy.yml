@@ -25,6 +25,7 @@ jobs:
       - name: 自检
         run: |
           node tests/data.test.js
+          node tests/forms.test.js
           node check-site.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

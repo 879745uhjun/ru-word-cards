@@ -15,6 +15,7 @@ jobs:
           node-version: '20'
       - name: 数据自检
         run: node tests/data.test.js
+          node tests/forms.test.js
       - name: 静态站点自检
         run: node check-site.js
       - name: JS 语法检查
