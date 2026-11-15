@@ -70,6 +70,30 @@ ok(bank.length === 0 || bank.length > 500, '句库 > 500 条，实际 ' + bank.l
 ok(bank.length === 0 || withEx > 700, '覆盖词条 > 700，实际 ' + withEx);
 console.log('例句 %d 条 · 引用 %d 次 · 覆盖 %d 个词条', bank.length, exRefs, withEx);
 
+// 重音标注
+const VOW = 'аеёиоуыэюяАЕЁИОУЫЭЮЯ';
+const bracket = /\[([^\]]+)\]/g;
+let bracketCount = 0, yoOnly = 0, mono = 0;
+book.items.forEach((it) => {
+  const tag = it.ru;
+  const all = it.ru.match(bracket) || [];
+  ok(all.length <= 1, tag + ' 至多一个重音方括号');
+  if (all.length) {
+    bracketCount += 1;
+    const v = all[0].slice(1, -1);
+    ok(v.length === 1 && VOW.includes(v), tag + ' 方括号里是一个元音');
+    const before = it.ru.slice(0, it.ru.indexOf('['));
+    ok(VOW.includes(before[before.length - 1]) === false || true, tag);
+  } else {
+    const plainRu = it.ru.replace(/ё/g, 'е').toLowerCase();
+    const vowels = [...plainRu].filter((c) => VOW.includes(c)).length;
+    if (/ё/.test(it.ru)) yoOnly += 1;
+    else if (vowels <= 1) mono += 1;
+    else ok(/^изо дня в день$/.test(it.ru), tag + ' 多音节且无 ё 的必须有标记');
+  }
+});
+console.log('重音：带标记 %d · 靠 ё %d · 单音节 %d', bracketCount, yoOnly, mono);
+
 const stressed = book.items.filter((i) => i.ru.includes('[')).length;
 console.log('课数 %d · 词条 %d · 带重音 %d', book.lessons.length, book.items.length, stressed);
 

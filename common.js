@@ -115,10 +115,15 @@ window.RWC = (function () {
   }
 
   // "вн[е]шность" -> 重音标在 е 上（与 ru-zh-cards 写法一致）
+  // ё 自带重音，染色但不添加重音符
   function ruHTML(raw) {
-    return esc(raw).replace(/\[([^\]]+)\]/g, function (_, v) {
-      return '<span class="accent">' + v + ACUTE + '</span>';
+    var s = esc(raw);
+    s = s.replace(/\[([^\]]+)\]/g, '\u0000$1\u0000');       // 先占位，避免与 ё 规则打架
+    s = s.replace(/[ёЁ]/g, '<span class="accent">$&</span>');
+    s = s.replace(/\u0000([^\u0000]+)\u0000/g, function (_, v) {
+      return '<span class="accent">' + v + (/^[ёЁ]$/.test(v) ? '' : ACUTE) + '</span>';
     });
+    return s;
   }
 
   function plainRu(raw) {
