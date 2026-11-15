@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{var m=localStorage.getItem("rwc-theme")||"light";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
 <meta name="theme-color" content="#eee7db">
 <title>来源与用法 · 俄语单词卡</title>
 <link rel="stylesheet" href="styles.css">
@@ -28,6 +29,8 @@
       <a href="study.html">背诵</a>
       <a href="unit.html">本课全部</a>
       <a href="sources.html" class="active">来源</a>
+      <a href="wrong.html">错题</a>
+      <button type="button" class="theme-btn" data-theme-toggle>跟随系统</button>
     </nav>
   </header>
 
@@ -49,6 +52,9 @@
     <h3>变格与变位</h3>
     <p>名词六格单复数、动词人称与过去时、形容词性数表由 <code>pymorphy3</code>（俄语形态词典）离线生成；表格里的重音来自课文语料中实际出现过的词形，标不到的留空。</p>
 
+    <h3>错题与方向</h3>
+    <p>评级「忘了」会为该词记一次错，错题本按错次排序，复习错题不改变正常排期。卡片支持俄→汉与汉→俄两个方向，只影响出题面，进度共用；主题有跟随系统、浅色、深色三档，默认浅色。</p>
+
     <h3>复习算法</h3>
     <p>四档自评（忘了 / 模糊 / 记得 / 轻松），按卡片各自的间隔系数递推下次复习日：首次为 1–4 天，之后按系数放大，间隔满 21 天记为「已掌握」。全部状态存在本机浏览器的 localStorage，不上传任何服务器。</p>
 
@@ -65,6 +71,7 @@
     <div><a href="index.html">← 返回首页</a></div>
   </footer>
 </div>
+<script src="theme.js"></script>
 <script src="pwa.js"></script>
 </body>
 </html>

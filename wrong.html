@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{var m=localStorage.getItem("rwc-theme")||"light";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
+<meta name="theme-color" content="#eee7db">
+<title>错题本 · 俄语单词卡</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">Я</div>
+      <div class="brand-copy">
+        <div class="brand-line">
+          <h1>俄语单词卡</h1>
+          <span class="alpha-badge">大学俄语 3</span>
+        </div>
+        <p>СЛОВА · 逐词重音与语法</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a href="study.html">背诵</a>
+      <a href="unit.html">本课全部</a>
+      <a href="sources.html">来源</a>
+      <a href="wrong.html" class="active">错题</a>
+      <button type="button" class="theme-btn" data-theme-toggle>跟随系统</button>
+    </nav>
+  </header>
+
+  <div class="section-title">
+    <h2>错题本</h2>
+    <p id="summary">—</p>
+  </div>
+
+  <div class="book-actions" style="margin:0 0 14px">
+    <a class="primary-btn" href="study.html?wrong=1" id="reviewBtn">复习错题 →</a>
+    <button type="button" class="ghost-btn" id="clearBtn">清除错题标记</button>
+  </div>
+
+  <div id="list" class="wordlist"></div>
+
+  <footer class="foot">
+    <div>评级为「忘了」会记一次错；复习到 3 次以上仍错的会排在前面。</div>
+    <div><a href="index.html">← 返回首页</a></div>
+  </footer>
+</div>
+
+<script src="data/course.js"></script>
+<script src="common.js"></script>
+<script src="wrong.js"></script>
+<script src="theme.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

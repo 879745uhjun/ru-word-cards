@@ -1,20 +1,24 @@
-/* 背诵页：翻面、四档评分、左右键切词 */
+/* 背诵页：方向切换、翻面、四档评分、左右键切词、错题模式 */
 (function () {
   var book = window.RU_WORDS_BOOK;
   var R = window.RWC;
   var state = R.load();
 
-  var queue = [];       // 本轮卡片
-  var answered = {};    // id -> 已评分
-  var idx = 0;
-  var revealed = false;
-  var history = [];     // 撤销栈
-  var lesson = 0;
-
   var FORMS = window.RU_WORDS_FORMS || {};
-
   var bankById = {};
   (book.bank || []).forEach(function (e) { bankById[e.id] = e; });
+
+  var queue = [];
+  var answered = {};
+  var idx = 0;
+  var revealed = false;
+  var history = [];
+  var lesson = 0;
+  var wrongMode = false;
+  var dir = 'ru';
+
+  try { dir = localStorage.getItem('rwc-dir') || 'ru'; } catch (e) {}
+  if (dir !== 'zh') dir = 'ru';
 
   var el = {
     tag: document.getElementById('deckTag'),
@@ -30,7 +34,9 @@
     due: document.getElementById('statDue'),
     done: document.getElementById('statDone'),
     streak: document.getElementById('statStreak'),
-    bookTitle: document.getElementById('bookTitle')
+    bookTitle: document.getElementById('bookTitle'),
+    dirRu: document.getElementById('dirRu'),
+    dirZh: document.getElementById('dirZh')
   };
 
   function param(name) {
@@ -47,8 +53,20 @@
     el.select.value = String(lesson);
   }
 
+  function wrongQueue() {
+    var items = book.items.filter(function (it) {
+      var c = state.cards[it.id];
+      return c && c.l > 0;
+    });
+    items.sort(function (a, b) {
+      var ca = state.cards[a.id], cb = state.cards[b.id];
+      return (cb.l - ca.l) || (ca.t - cb.t);
+    });
+    return items.map(function (it) { return { it: it, isNew: false }; });
+  }
+
   function rebuild() {
-    queue = R.buildQueue(book, state, lesson);
+    queue = wrongMode ? wrongQueue() : R.buildQueue(book, state, lesson);
     answered = {};
     idx = 0;
     revealed = false;
@@ -87,16 +105,23 @@
     el.pos.textContent = queue.length ? (idx + 1) + ' / ' + queue.length : '— / —';
   }
 
+  function renderDir() {
+    if (el.dirRu) el.dirRu.className = dir === 'ru' ? 'active' : '';
+    if (el.dirZh) el.dirZh.className = dir === 'zh' ? 'active' : '';
+  }
+
   function renderDone() {
     var c = R.counts(book, state);
-    el.tag.textContent = lesson ? ('第 ' + lesson + ' 课') : '全部课程';
+    el.tag.textContent = wrongMode ? '错题复习' : (lesson ? ('第 ' + lesson + ' 课') : '全部课程');
     el.counter.textContent = '0 / 0';
     el.bar.style.width = '100%';
+    var extra = wrongMode
+      ? '<p class="hint"><a href="wrong.html">← 回到错题本</a></p>'
+      : '<p class="hint"><button class="grade" id="moreBtn" style="max-width:230px;flex-direction:row;gap:8px">再学 10 个新词</button></p>';
     el.area.innerHTML =
       '<p class="word" style="font-size:32px">Сегодня всё</p>' +
-      '<p class="meaning">这一轮的卡片都过完了</p>' +
-      '<p class="hint">待复习 ' + c.due + ' 张 · 已掌握 ' + c.done + ' / ' + c.total + '</p>' +
-      '<p class="hint"><button class="grade" id="moreBtn" style="max-width:230px;flex-direction:row;gap:8px">再学 10 个新词</button></p>';
+      '<p class="meaning">' + (wrongMode ? '错题都过完了' : '这一轮的卡片都过完了') + '</p>' +
+      '<p class="hint">待复习 ' + c.due + ' 张 · 已掌握 ' + c.done + ' / ' + c.total + '</p>' + extra;
     setGrades(false);
     el.prev.disabled = true;
     el.next.disabled = true;
@@ -111,20 +136,33 @@
 
   function render() {
     renderStats();
+    renderDir();
     if (!queue.length || answeredCount() >= queue.length) { renderDone(); return; }
     var item = current();
     if (!item) { renderDone(); return; }
 
     var it = item.it;
-    el.tag.textContent = '第 ' + it.l + ' 课 · ' + R.lessonTitle(book, it.l).split(' · ')[0] + (item.isNew ? ' · 新词' : '');
+    el.tag.textContent = wrongMode
+      ? '错题复习 · 第 ' + it.l + ' 课'
+      : '第 ' + it.l + ' 课 · ' + R.lessonTitle(book, it.l).split(' · ')[0] + (item.isNew ? ' · 新词' : '');
     el.counter.textContent = (idx + 1) + ' / ' + queue.length;
     el.bar.style.width = Math.round((answeredCount() / queue.length) * 100) + '%';
 
-    var html = '<p class="word">' + R.ruHTML(it.ru) + '</p>';
-    if (it.alt && it.alt.length) {
-      html += '<p class="alt">' + it.alt.map(function (a) { return R.ruHTML(a); }).join('　·　') + '</p>';
+    var html = '';
+    if (dir === 'ru') {
+      html += '<p class="word">' + R.ruHTML(it.ru) + '</p>';
+      if (it.alt && it.alt.length) {
+        html += '<p class="alt">' + it.alt.map(function (a) { return R.ruHTML(a); }).join('　·　') + '</p>';
+      }
     }
+
     if (revealed) {
+      if (dir === 'zh') {
+        html += '<p class="word">' + R.ruHTML(it.ru) + '</p>';
+        if (it.alt && it.alt.length) {
+          html += '<p class="alt">' + it.alt.map(function (a) { return R.ruHTML(a); }).join('　·　') + '</p>';
+        }
+      }
       html += '<p class="meaning">' + R.esc(it.zh) + '</p>';
       html += '<div class="grammar">' + R.grammarChips(it) + '</div>';
       html += R.formsHTML(FORMS[it.id]);
@@ -137,8 +175,14 @@
       if (it.note) html += '<p class="hint">' + R.esc(it.note) + '</p>';
       html += '<p class="hint"><kbd>1</kbd> 忘了 · <kbd>2</kbd> 模糊 · <kbd>3</kbd> 记得 · <kbd>4</kbd> 轻松</p>';
     } else {
-      html += '<p class="hint"><kbd>空格</kbd> 显示释义 · <kbd>←</kbd><kbd>→</kbd> 切词</p>';
+      if (dir === 'zh') {
+        html += '<p class="word zh-prompt">' + R.esc(it.zh) + '</p>';
+        html += '<p class="hint"><kbd>空格</kbd> 显示俄语 · <kbd>←</kbd><kbd>→</kbd> 切词</p>';
+      } else {
+        html += '<p class="hint"><kbd>空格</kbd> 显示释义 · <kbd>←</kbd><kbd>→</kbd> 切词</p>';
+      }
     }
+
     el.area.innerHTML = html;
     setGrades(revealed);
     renderPager();
@@ -150,7 +194,6 @@
     render();
   }
 
-  // 左右键切词：与评分无关，不认识的也能直接翻过去
   function prev() {
     if (idx <= 0) return;
     idx -= 1;
@@ -199,6 +242,14 @@
     render();
   }
 
+  function setDir(d) {
+    if (d === dir) return;
+    dir = d;
+    try { localStorage.setItem('rwc-dir', d); } catch (e) {}
+    revealed = false;
+    render();
+  }
+
   document.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     var k = e.key;
@@ -211,6 +262,8 @@
 
   el.prev.addEventListener('click', prev);
   el.next.addEventListener('click', next);
+  if (el.dirRu) el.dirRu.addEventListener('click', function () { setDir('ru'); });
+  if (el.dirZh) el.dirZh.addEventListener('click', function () { setDir('zh'); });
 
   el.grades.addEventListener('click', function (e) {
     var btn = e.target.closest('.grade');
@@ -218,7 +271,7 @@
   });
 
   document.getElementById('cardArea').addEventListener('click', function (e) {
-    if (e.target.closest('button')) return;
+    if (e.target.closest('button') || e.target.closest('a')) return;
     reveal();
   });
 
@@ -228,7 +281,13 @@
     rebuild();
   });
 
-  lesson = param('lesson');
-  initSelect();
+  wrongMode = /[?&]wrong=1/.test(location.search);
+  if (wrongMode) {
+    el.select.disabled = true;
+    el.select.hidden = true;
+  } else {
+    lesson = param('lesson');
+    initSelect();
+  }
   rebuild();
 })();

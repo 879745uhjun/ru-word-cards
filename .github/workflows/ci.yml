@@ -16,6 +16,7 @@ jobs:
       - name: 数据自检
         run: node tests/data.test.js
           node tests/forms.test.js
+          node tests/pages.test.js
       - name: 静态站点自检
         run: node check-site.js
       - name: JS 语法检查

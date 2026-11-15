@@ -1,5 +1,5 @@
 /* 离线缓存：静态站，全部文件预缓存 */
-const CACHE = 'ru-word-cards-v6';
+const CACHE = 'ru-word-cards-v7';
 const FILES = [
   './',
   './index.html',
@@ -11,6 +11,9 @@ const FILES = [
   './index.js',
   './study.js',
   './unit.js',
+  './theme.js',
+  './wrong.js',
+  './wrong.html',
   './pwa.js',
   './data/course.js',
   './data/forms.js',
