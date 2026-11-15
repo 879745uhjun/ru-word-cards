@@ -175,12 +175,11 @@
       if (it.note) html += '<p class="hint">' + R.esc(it.note) + '</p>';
       html += '<p class="hint"><kbd>1</kbd> 忘了 · <kbd>2</kbd> 模糊 · <kbd>3</kbd> 记得 · <kbd>4</kbd> 轻松</p>';
     } else {
-      if (dir === 'zh') {
-        html += '<p class="word zh-prompt">' + R.esc(it.zh) + '</p>';
-        html += '<p class="hint"><kbd>空格</kbd> 显示俄语 · <kbd>←</kbd><kbd>→</kbd> 切词</p>';
-      } else {
-        html += '<p class="hint"><kbd>空格</kbd> 显示释义 · <kbd>←</kbd><kbd>→</kbd> 切词</p>';
-      }
+      var hasTable = !!FORMS[it.id];
+      var what = dir === 'zh' ? '俄语' : '释义';
+      if (hasTable) what += (FORMS[it.id].k === 'v' ? '与变位' : '与变格');
+      if (dir === 'zh') html += '<p class="word zh-prompt">' + R.esc(it.zh) + '</p>';
+      html += '<p class="hint"><kbd>空格</kbd> 显示' + what + ' · <kbd>←</kbd><kbd>→</kbd> 切词</p>';
     }
 
     el.area.innerHTML = html;

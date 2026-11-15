@@ -1,5 +1,5 @@
 /* 离线缓存：静态站，全部文件预缓存 */
-const CACHE = 'ru-word-cards-v7';
+const CACHE = 'ru-word-cards-v8';
 const FILES = [
   './',
   './index.html',
